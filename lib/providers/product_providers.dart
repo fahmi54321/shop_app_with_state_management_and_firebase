@@ -53,7 +53,7 @@ class ProductProvider with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) {
-    //todo 1 (next edit_providers_screen)
+
     const url = 'https://firstflutter-e43f3-default-rtdb.firebaseio.com/products.json';
     return http.post(
       Uri.parse(url),
@@ -76,6 +76,9 @@ class ProductProvider with ChangeNotifier {
       );
       _items.add(newProduct);
       notifyListeners();
+    }).catchError((error){ //todo 1 (next edit_providers_screen)
+      print(error);
+      throw error;
     });
   }
 

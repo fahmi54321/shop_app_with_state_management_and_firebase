@@ -32,7 +32,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   };
 
   var _isInit = true;
-  var _isLoading = false; //todo 4
+  var _isLoading = false;
 
   void initState() {
     _imageUrlFocusNode.addListener(_updateImageUrl);
@@ -97,7 +97,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     _form.currentState?.save();
 
     setState(() {
-      _isLoading = true; //todo 5
+      _isLoading = true;
     });
 
     if (_editedProduct.id.isNotEmpty) {
@@ -110,7 +110,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
       );
 
       setState(() {
-        _isLoading = false; //todo 6
+        _isLoading = false;
       });
 
       Navigator.of(context).pop();
@@ -118,20 +118,40 @@ class _EditProductScreenState extends State<EditProductScreen> {
       Provider.of<ProductProvider>(
         context,
         listen: false,
-      )
-          .addProduct(
+      ).addProduct(
         _editedProduct,
-      )
-          .then((_) {
-        //todo 2
+      ).catchError((error){
+        //todo 2 (finish)
+        return showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text(
+              'An error occurred',
+            ),
+            content: Text(
+              'Something went wrong',
+            ),
+            actions: [
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+                child: Text(
+                  'Okay',
+                ),
+              )
+            ],
+          ),
+        );
+      }).then((_) {
 
         setState(() {
-          _isLoading = false; //todo 7
+          _isLoading = false;
         });
 
         Navigator.of(
           context,
-        ).pop(); //todo 3
+        ).pop();
       });
     }
   }
@@ -148,7 +168,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           ),
         ],
       ),
-      body: _isLoading == true //todo 8 (finish)
+      body: _isLoading == true
           ? Center(
               child: CircularProgressIndicator(),
             )
