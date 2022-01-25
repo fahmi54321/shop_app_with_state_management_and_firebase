@@ -53,7 +53,6 @@ class ProductProvider with ChangeNotifier {
   }
 
   void addProduct(Product product) {
-
     //todo 1 (finish)
     const url =
         'https://firstflutter-e43f3-default-rtdb.firebaseio.com/products.json';
@@ -68,17 +67,17 @@ class ProductProvider with ChangeNotifier {
           'isFavorite': product.isFavorite,
         },
       ),
-    );
-
-    final newProduct = Product(
-      id: DateTime.now().toString(),
-      title: product.title,
-      description: product.description,
-      price: product.price,
-      imageUrl: product.imageUrl,
-    );
-    _items.add(newProduct);
-    notifyListeners();
+    ).then((value) {
+      final newProduct = Product(
+        id: jsonDecode(value.body)['name'],
+        title: product.title,
+        description: product.description,
+        price: product.price,
+        imageUrl: product.imageUrl,
+      );
+      _items.add(newProduct);
+      notifyListeners();
+    });
   }
 
   void updateProduct(String id, Product newProduct) {
