@@ -21,18 +21,18 @@ class _ProductOverviewScreensState extends State<ProductOverviewScreens> {
 
   var _showOnlyFavorites = false;
   var _initState = true;
-  var _isLoading = false; //todo 2
+  var _isLoading = false;
 
   @override
   void didChangeDependencies() {
     if(_initState == true){
       setState(() {
-        _isLoading = true; //todo 3
+        _isLoading = true;
       });
       Provider.of<ProductProvider>(context).fetchAndSetProducts().then((_){
         // kenapa gak pakai awai aja ? karena didChangeDependencies tidak bisa pakai async
         setState(() {
-          _isLoading = false; //todo 4
+          _isLoading = false;
         });
       });
     }
@@ -87,7 +87,7 @@ class _ProductOverviewScreensState extends State<ProductOverviewScreens> {
           ),
         ],
       ),
-      body: _isLoading == true //todo 5(finish)
+      body: _isLoading == true
           ? Center(
               child: CircularProgressIndicator(),
             )

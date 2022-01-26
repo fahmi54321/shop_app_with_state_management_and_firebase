@@ -52,7 +52,6 @@ class ProductProvider with ChangeNotifier {
     return _items.firstWhere((element) => element.id == id);
   }
 
-  // todo 1 (next product_overview_screens)
   Future<void> fetchAndSetProducts() async{
     const url = 'https://firstflutter-e43f3-default-rtdb.firebaseio.com/products.json';
 
@@ -117,9 +116,19 @@ class ProductProvider with ChangeNotifier {
     }
   }
 
-  void updateProduct(String id, Product newProduct) {
+  //todo 1 (next edit_product_screen)
+  Future<void> updateProduct(String id, Product newProduct) async {
     final prodIndex = _items.indexWhere((element) => element.id == id);
     if (prodIndex >= 0) {
+
+      final url = 'https://firstflutter-e43f3-default-rtdb.firebaseio.com/products/$id.json';
+      await http.patch(Uri.parse(url),body : json.encode({
+        'title' : newProduct.title,
+        'description' : newProduct.description,
+        'imageUrl' : newProduct.imageUrl,
+        'price' : newProduct.price,
+      }));
+
       _items[prodIndex] = newProduct;
       notifyListeners();
     } else {}

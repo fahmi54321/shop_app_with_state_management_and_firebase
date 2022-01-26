@@ -89,7 +89,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   Future<void> _saveForm() async {
-    //todo 2
+
     final isValid = _form.currentState?.validate();
     if (!isValid!) {
       return;
@@ -102,23 +102,16 @@ class _EditProductScreenState extends State<EditProductScreen> {
     });
 
     if (_editedProduct.id.isNotEmpty) {
-      Provider.of<ProductProvider>(
+      await Provider.of<ProductProvider>( //todo 2
         context,
         listen: false,
       ).updateProduct(
         _editedProduct.id,
         _editedProduct,
       );
-
-      setState(() {
-        _isLoading = false;
-      });
-
-      Navigator.of(context).pop();
     } else {
       try {
         await Provider.of<ProductProvider>(
-          //todo 3
           context,
           listen: false,
         ).addProduct(
@@ -146,17 +139,17 @@ class _EditProductScreenState extends State<EditProductScreen> {
             ],
           ),
         );
-      } finally {
-        //todo 4 (finish)
-        setState(() {
-          _isLoading = false;
-        });
-
-        Navigator.of(
-          context,
-        ).pop();
       }
     }
+
+    //todo 3 (finish)
+    setState(() {
+      _isLoading = false;
+    });
+
+    Navigator.of(
+      context,
+    ).pop();
   }
 
   @override
