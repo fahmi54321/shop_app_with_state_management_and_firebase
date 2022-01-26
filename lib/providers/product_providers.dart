@@ -116,7 +116,6 @@ class ProductProvider with ChangeNotifier {
     }
   }
 
-  //todo 1 (next edit_product_screen)
   Future<void> updateProduct(String id, Product newProduct) async {
     final prodIndex = _items.indexWhere((element) => element.id == id);
     if (prodIndex >= 0) {
@@ -132,5 +131,29 @@ class ProductProvider with ChangeNotifier {
       _items[prodIndex] = newProduct;
       notifyListeners();
     } else {}
+  }
+
+  //todo 1 (next user_product_item_widget)
+  Future<void> deleteProduct(String id) async {
+    final url = 'https://firstflutter-e43f3-default-rtdb.firebaseio.com/products/$id.json';
+
+    final existingProductIndex = _items.indexWhere((element) => element.id == id);
+    final existingProduct = _items[existingProductIndex];
+
+    _items.removeAt(existingProductIndex); // item di aplikasi dihapus
+    notifyListeners();
+
+    var response = await http.delete(Uri.parse(url)); // melakukan delete pada database
+
+    if (response.statusCode >= 400) { // error maka item di aplikasi dikembalikan
+      _items.insert(
+        existingProductIndex,
+        existingProduct,
+      );
+      notifyListeners();
+      throw Exception();
+    }
+
+    existingProduct == null; // tidak error maka item di aplikasi sudah null
   }
 }
