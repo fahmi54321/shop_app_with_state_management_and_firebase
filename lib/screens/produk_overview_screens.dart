@@ -5,6 +5,7 @@ import '../widget/badge.dart';
 import '../providers/cart_providers.dart';
 import '../screens/cart_screen.dart';
 import '../widget/app_drawer.dart';
+import '../providers/product_providers.dart';
 
 enum FilterOptions {
   Favorites,
@@ -19,6 +20,26 @@ class ProductOverviewScreens extends StatefulWidget {
 class _ProductOverviewScreensState extends State<ProductOverviewScreens> {
 
   var _showOnlyFavorites = false;
+  var _initState = true;
+  var _isLoading = false; //todo 2
+
+  @override
+  void didChangeDependencies() {
+    if(_initState){
+      setState(() {
+        _isLoading = true; //todo 3
+      });
+      Provider.of<ProductProvider>(context).fetchAndSetProducts().then((_){
+        // kenapa gak pakai awai aja ? karena didChangeDependencies tidak bisa pakai async
+        setState(() {
+          _isLoading = false; //todo 4
+        });
+      });
+    }
+    _initState = false;
+    super.didChangeDependencies();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -66,8 +87,12 @@ class _ProductOverviewScreensState extends State<ProductOverviewScreens> {
           ),
         ],
       ),
-      body: ProductsGrid(_showOnlyFavorites),
-      drawer: AppDrawer(), // todo 2 (next orders_screen)
+      body: _isLoading == true //todo 5(finish)
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : ProductsGrid(_showOnlyFavorites),
+      drawer: AppDrawer(),
     );
   }
 }
