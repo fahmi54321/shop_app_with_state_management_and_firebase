@@ -25,7 +25,7 @@ class _ProductOverviewScreensState extends State<ProductOverviewScreens> {
 
   @override
   void didChangeDependencies() {
-    if(_initState){
+    if(_initState == true){
       setState(() {
         _isLoading = true; //todo 3
       });
