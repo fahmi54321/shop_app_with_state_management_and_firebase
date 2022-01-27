@@ -39,17 +39,7 @@ class CartScreen extends StatelessWidget {
                     ),
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
-                  FlatButton(
-                    onPressed: () { //todo 1 (finish)
-                      Provider.of<OrderProvider>(context,listen: false).addOrder(
-                        cart.items.values.toList(),
-                        cart.totalAmount,
-                      );
-                      cart.clear();
-                    },
-                    child: Text('Order now'),
-                    textColor: Theme.of(context).primaryColor,
-                  ),
+                  OrderButton(cart: cart), //todo 2
                 ],
               ),
             ),
@@ -61,7 +51,7 @@ class CartScreen extends StatelessWidget {
             child: ListView.builder(
               itemBuilder: (ctx, i) => CartItemWidget(
                 cart.items.values.toList()[i].id,
-                cart.items.keys.toList()[i], // todo 3 (finish)
+                cart.items.keys.toList()[i], //
                 cart.items.values.toList()[i].price,
                 cart.items.values.toList()[i].quantity,
                 cart.items.values.toList()[i].title,
@@ -71,6 +61,49 @@ class CartScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+//todo 3
+class OrderButton extends StatefulWidget {
+  const OrderButton({
+    Key? key,
+    required this.cart,
+  }) : super(key: key);
+
+  final CartProvider cart;
+
+  @override
+  State<OrderButton> createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  var _isLoading = false; //todo 4
+
+  @override
+  Widget build(BuildContext context) {
+    return FlatButton( //todo 5 (finish)
+      onPressed: (widget.cart.totalAmount <= 0 || _isLoading == true)
+          ? null
+          : () async {
+              setState(() {
+                _isLoading = true;
+              });
+
+              await Provider.of<OrderProvider>(context, listen: false).addOrder(
+                widget.cart.items.values.toList(),
+                widget.cart.totalAmount,
+              );
+
+              setState(() {
+                _isLoading = false;
+              });
+
+              widget.cart.clear();
+            },
+      child: _isLoading == true ? CircularProgressIndicator() : Text('Order now'),
+      textColor: Theme.of(context).primaryColor,
     );
   }
 }
