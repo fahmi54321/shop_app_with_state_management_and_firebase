@@ -61,6 +61,10 @@ class ProductProvider with ChangeNotifier {
 
         final List<Product> _loadedProduct = [];
 
+        if(extractedData == null){
+          return;
+        }
+
         extractedData.forEach((key, value) {
         _loadedProduct.add(
           Product(
